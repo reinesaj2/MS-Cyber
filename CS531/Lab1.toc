@@ -1,0 +1,11 @@
+\contentsline {section}{\numberline {1}Introduction}{2}{section.1}%
+\contentsline {section}{\numberline {2}SQL Primer}{2}{section.2}%
+\contentsline {section}{\numberline {3}Lab Exercises}{2}{section.3}%
+\contentsline {subsection}{\numberline {3.1}Task 2: SQL Query Evaluation}{2}{subsection.3.1}%
+\contentsline {subsection}{\numberline {3.2}Task 3: Hands-on with SQL Injection}{2}{subsection.3.2}%
+\contentsline {subsection}{\numberline {3.3}Task 4: Continued Exploration}{6}{subsection.3.3}%
+\contentsline {subsubsection}{\numberline {3.3.1}Medium Security Level Testing}{7}{subsubsection.3.3.1}%
+\contentsline {subsection}{\numberline {3.4}Bypassing Medium Security using HTML and JavaScript}{9}{subsection.3.4}%
+\contentsline {subsubsection}{\numberline {3.4.1}Inspecting and Modifying HTML}{9}{subsubsection.3.4.1}%
+\contentsline {section}{\numberline {4}Conclusion}{13}{section.4}%
+\contentsline {section}{\numberline {5}References}{13}{section.5}%

@@ -1,0 +1,11 @@
+﻿Main Ideas: 
+Abraham, your updated presentation on Executing Code with Too Much Privilege is very sound and thorough. You begin with the Principle of Least Privilege (PoLP), defining it better than the original powerpoint and anchor it with examples such as Windows Media Player’s admin-level access risk. Then provide a visual aid that shows what implementing PoLP can do for your system as a whole
+Flow and Depth
+Your slides flow smoothly, moving from the history of privilege models to the type of privilege models. Bridging both theory and application very well. 
+Presentation Critique (27/30)
+Compared to last year’s version, you’ve clearly added more depth and practical detail, which is great. However some slides become dense with application without too much explanation, for example the Testing for Privilege Management slide, which includes concepts that are not explained later on. I feel like with the inclusion of a step-by-step breakdown some specific concepts would be easier to comprehend. Clearer separation between theoretical concepts and practical tips could prevent technical overload and make key takeaways sharper.
+Forum Activity (8/10)
+In the discussion forum, your questions were practical and engaging, especially when you focused on Role-Based Access Control. For example, when you asked about the steps to implement RBAC, it led to helpful suggestions and examples from others on how to assign specific permissions based on user roles. However, exploring questions about newer developments, like managing permissions in cloud platforms, could have deepened the conversation. You did a fantastic job of covering all topics in your presentation.
+
+Forum Interaction (10/10)
+You were very engaged with the discussions and offered your opinions or built on comments posted by others. You didn’t just agree with points made; you added distinct examples and introduced tools or practices that could make things clearer. For instance, when you mentioned over-privilege execution impacts, you sparked an in depth conversation with Mo that included examples that sparked good conversation.

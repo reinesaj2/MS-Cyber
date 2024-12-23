@@ -1,0 +1,197 @@
+\documentclass{article}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{geometry}
+\usepackage{xcolor}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage[utf8]{inputenc} % for Unicode input
+\usepackage[T1]{fontenc} % for font encoding
+\usepackage{lmodern} % Latin Modern font that supports the T1 encoding
+\usepackage{textcomp} % for additional symbols
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{setspace}
+\usepackage{enumitem}
+\usepackage{listings} % For code listing
+
+% Custom colors for code highlighting
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+% Set listings configuration
+\lstset{
+  basicstyle=\ttfamily,
+  frame=single,
+  breaklines=true,
+  postbreak=\mbox{\textcolor{red}{$\hookrightarrow$}\space},
+  numbers=left,
+  numberstyle=\small,
+  numbersep=8pt,
+  showstringspaces=false,
+  tabsize=2,
+  language=bash,
+  captionpos=b
+}
+
+% Adjust margins as needed
+\geometry{
+ a4paper,
+ total={170mm,257mm},
+ left=20mm,
+ top=20mm,
+}
+
+\title{Linux File Permissions}
+\author{Abraham J. Reines}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section*{Introduction}
+In order to verify the answers of our project on Linux File Permissions, multiple bash scripts were written. The scripts are found in the \textit{'Script Listings'} section at the bottom of this report. The output of the script \texttt{assignment\_solutions.sh} can be found at the top of sections 3.4.1, 3.4.2, 3.4.3 of this report. The scripts are intended to be submitted along side of this PDF. 
+
+\section*{3.4.1 Understanding Linux file permissions}
+
+\subsection*{Output of Solutions for 3.4.1:}
+\lstinputlisting[firstline=1, lastline=13,caption={Solutions to 3.4.1.}]{solutions_output.txt}
+
+\begin{enumerate}
+    \item \textbf{Can Alice read Bob's file \texttt{data.txt}? Why?}\\
+    Yes, the file \texttt{data.txt} permissions are set as \texttt{-rw-r----r--}, which grants read access to all users including Alice.
+    
+    \item \textbf{Can Alice remove Bob's file \texttt{data.txt}? Why?}\\
+    No, Alice lacks write permission on Bob's home directory \texttt{/cs/home/stu/bob}, which is required to delete files.
+    
+    \item \textbf{Can Alice read Bob's file \texttt{secret.txt}? Why?}\\
+    No, the file \texttt{secret.txt} has permissions \texttt{-rw-r-----}, which restricts read access to the owner and group `faculty`. Since Alice is not a member of the `faculty` group, she does not have read access.
+    
+    \item \textbf{Can Alice remove Bob's file \texttt{secret.txt}? Why?}\\
+    No, Alice cannot delete \texttt{secret.txt} due to the absence of write permission in Bob's home directory.
+    
+    \item \textbf{When Bob creates a new file with the command \texttt{echo “My Super Secret is b7d5d78shes” > mysecret.txt}, what are the full permissions of this file?}\\
+The full permissions for the new file \texttt{/cs/home/stu/bob/mysecret2.txt} are: \texttt{-rw-r-sr---- 1 bob faculty 0 Feb 22 16:48 /cs/home/stu/bob/mysecret2.txt}
+\end{enumerate}
+
+\section*{3.4.2 Setting Linux file permissions}
+
+\subsection*{Output of Solutions for 3.4.2:}
+\lstinputlisting[firstline=15, lastline=29,caption={Solutions to 3.4.2.}]{solutions_output.txt}
+
+\begin{enumerate}
+    \item \textbf{Can Bob change the permissions so that all other students in \texttt{csmajor} can read \texttt{data.txt}, but any other users who are not in \texttt{csmajor} cannot?}\\
+    Yes, by executing \texttt{chmod 640 /cs/home/stu/bob/data.txt}, Bob sets the file \texttt{data.txt} to be readable and writable by the owner and only readable by the group.
+    
+    \item \textbf{If Bob wants to set the default permission of his new files to be readable and writable by himself and the group, and readable by others, what commands should he use? Hint: use umask.}\\
+    Bob should issue the command \texttt{umask 002} to ensure files are created with \texttt{rw--rw--r----} permissions and directories with \texttt{drwxr-s----}.
+\end{enumerate}
+
+Bob wants to set the default permissions for his new files to be:
+
+\begin{itemize}
+    \item Non-executable by himself (user)
+    \item Readable and writable but not executable by the group
+    \item Readable but not writable or executable by others
+\end{itemize}
+
+Given the most permissive default permissions for files are \texttt{666} (\texttt{rw-rw-rw-}), the \texttt{umask} subtracts from these defaults to determine the actual default permissions for new files and directories.
+
+The target permissions for files should therefore be:
+
+\begin{itemize}
+    \item \texttt{rw} for the user: \texttt{6} in octal (readable, writable, non-executable)
+    \item \texttt{rw-} for the group: \texttt{6} in octal (readable, writable)
+    \item \texttt{r--} for others: \texttt{4} in octal (readable)
+\end{itemize}
+
+Given the \texttt{umask} is subtracted from default permissions, we want a \texttt{umask} to result in \texttt{664} for files. We want a \texttt{umask} to results in \texttt{664} permissions for files:
+
+\begin{itemize}
+    \item User: \texttt{6} (\texttt{rw-})
+    \item Group: \texttt{6} (\texttt{rw-})
+    \item Others: \texttt{4} (\texttt{r--})
+\end{itemize}
+
+Subtract these from the default \texttt{666}:
+
+\begin{itemize}
+    \item For user: \texttt{6} (default) - \texttt{6} (desired) = \texttt{0}
+    \item For group: \texttt{6} (default) - \texttt{6} (desired) = \texttt{0}
+    \item For others: \texttt{6} (default) - \texttt{4} (desired) = \texttt{2}
+\end{itemize}
+
+The \texttt{umask} should therefore be \texttt{002}, ensuring files are created with \texttt{664} permission.So, the correct \texttt{umask} command for Bob's scenario would be:
+
+\begin{verbatim}
+umask 002
+\end{verbatim}
+
+\section*{3.4.3 A more complex case}
+
+Please see \texttt{assignment\_solutions.sh} (specifically, lines \textit{114-185}) for the proper commands to accomplish Alice's desired effect. This is listed in the \textit{Script Listings} section. The following are commands for running the scripts: 
+
+\begin{lstlisting}[language=bash]
+sudo chmod +x setup_assignment.sh
+sudo ./setup_assignment.sh
+sudo chmod +x assignment_solutions_v2. sh
+sudo ./assignment_solutions_v2.sh > solutions_output.txt
+\end{lstlisting}
+
+{\color{red}Alice should verify these settings in her environment to ensure they are correct. Should she face permission-related issues, the system administrator’s intervention may be required. She will most likely need to use sudo. If Alice can request sudo privileges for specific commands, she can ask the administrator to add Bob to the group or do it herself if granted those privileges. }
+
+\subsection*{Output of Solutions for 3.4.3:}
+\lstinputlisting[firstline=31, lastline=53,caption={Solutions to 3.4.3.}]{solutions_output.txt}
+
+The requirements for \texttt{treasure.txt} are specific, so let's assess the given solution for each requirement:
+
+\begin{enumerate}
+    \item There must be only a single copy of the file in the system:
+    \begin{itemize}
+        \item The provided output confirms all copies removed from the system, with a line says ``Removed unauthorized copies of \texttt{treasure.txt} within the home directory.'' The script was designed to remove all \texttt{treasure.txt} files from the system. 
+    \end{itemize}
+    
+    \item Alice's own permissions must be readable/writable/non-executable:
+    \begin{itemize}
+        \item The final permissions \texttt{rw-} for Alice suggests she has read and write access, as required.
+    \end{itemize}
+    
+    \item Alice needs to allow Bob to read and write the file:
+    \begin{itemize}
+        \item Bob is added to the \texttt{treasure\_group} group, which has read/write permissions on the file (\texttt{rw-}). This satisfies the requirement.
+    \end{itemize}
+    
+    \item Alice needs to allow Charlie to read but not write the file:
+    \begin{itemize}
+        \item An Access Control List (ACL) entry for Charlie with read permissions (\texttt{r--}) is set. This satisfies the requirement.
+    \end{itemize}
+    
+    \item The execute permission must be disabled for all users:
+    \begin{itemize}
+        \item The final permissions do not include execute permissions for anyone, satisfying this requirement.
+    \end{itemize}
+    
+    \item All other users (such as Dave) in the system must not be able to read or write the file:
+    \begin{itemize}
+        \item The \texttt{other} permissions are set to \texttt{---}, which means no access for users other than the owner and group, fulfilling this requirement.
+    \end{itemize}
+    
+    \item Alice does not have sudo privilege, but she can ask the systems administrator for help if necessary:
+    \begin{itemize}
+        \item Alice would most likely need sudo permissions and administrator help/intervention. 
+    \end{itemize}
+\end{enumerate}
+
+\section*{Script Listings}
+%\lstinputlisting[caption={Initial setup with setup\_assignement.sh.}]{setup_assignment.sh}
+\lstinputlisting[firstline=118, lastline=190,caption={assignment\_solutions.sh for printing assignment solutions.}]{assignment_solutions.sh}
+
+\vfill
+  \section*{Academic Integrity Pledge}
+    {\color{red}\textit{“This work complies with the JMU honor code. I did not give or receive unauthorized help on this assignment.”}}
+
+\end{document}
