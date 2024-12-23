@@ -1,0 +1,151 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{listings}
+\usepackage{color}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{geometry}
+\usepackage{xcolor}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage[utf8]{inputenc} % for Unicode input
+\usepackage[T1]{fontenc} % for font encoding
+\usepackage{lmodern} % Latin Modern font that supports the T1 encoding
+\usepackage{textcomp} % for additional symbols
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{setspace}
+\usepackage{enumitem}
+\usepackage{hyperref}
+
+% Define colors for code listing
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+% Setup the style for the Python code listings
+\lstdefinestyle{pythonstyle}{
+    language=Python,
+    backgroundcolor=\color{backcolour},
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\small,
+    breakatwhitespace=false,
+    breaklines=true,
+    postbreak=\mbox{\textcolor{red}{$\hookrightarrow$}\space},
+    captionpos=b,
+    keepspaces=true,
+    numbers=left,
+    numbersep=5pt,
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    tabsize=2
+}
+
+% Setup the style for plain text listings
+\lstdefinestyle{plaintextstyle}{
+    language={},
+    basicstyle=\ttfamily,
+    frame=single,
+    breaklines=true,
+    postbreak=\mbox{\textcolor{red}{$\hookrightarrow$}\space},
+    numbers=left,
+    numberstyle=\small,
+    numbersep=8pt,
+    showstringspaces=false,
+    tabsize=2,
+    language=bash,
+    captionpos=b
+}
+
+
+% Adjust margins as needed
+\geometry{
+ a4paper,
+ total={170mm,257mm},
+ left=20mm,
+ top=20mm,
+}
+
+\title{Algorithm Analysis}
+\author{Abraham J. Reines} % Replace [Your Name] with your actual name.
+\date{\today} % Use the date of document completion.
+
+\begin{document}
+
+\maketitle
+
+\section*{Task 6.3.1}
+
+In the examination of behavior of function $f(n) = 10^{12}n^3 + 10^6n^2 + n + 1$ against polynomial $g(n) = n^4$, we have a theoretical analysis complemented by limit calculations both with paper and pencil and using SymPy to derive the following conclusions:
+
+\begin{enumerate}
+    \item \textbf{Is \( 10^{12}n^3 + 10^6n^2 + n + 1 \) not equivalent to \( \Theta(n^4) \)?}\\
+    Yes. \( 10^{12}n^3 + 10^6n^2 + n + 1 \) is not \( \Theta(n^4) \) because the highest order term, \( n^3 \), says what the growth rate of the function is. As \( n \) appraoches infinity, the \( n^4 \) term would grow faster than the \( n^3 \) term. \( 10^{12}n^3 + 10^6n^2 + n + 1 \) is \( \Theta(n^3) \), not \( \Theta(n^4) \). It cannot be bounded above and below by \( n^4 \) for a large \( n \).
+
+    \item \textbf{Is \( 10^{12}n^3 + 10^6n^2 + n + 1 \) equivalent to \( o(n^4) \)?}\\
+    Yes. \( 10^{12}n^3 + 10^6n^2 + n + 1 \) is \( o(n^4) \) because as \( n \) grows, the function \( 10^{12}n^3 + 10^6n^2 + n + 1 \) increase at a slower rate than a function \( n^4 \). It can be bound above by \( C \cdot n^4 \) for some constant \( C \) and sufficiently large \( n \).
+
+    \item \textbf{Is \( 10^{12}n^3 + 10^6n^2 + n + 1 \) equivalent to \( \omega(n^4) \)?}\\
+    No. \( 10^{12}n^3 + 10^6n^2 + n + 1 \) is not \( \omega(n^4) \) because it does not grow faster than any function proportional to \( n^4 \). For \( f(n) \) to be \( \omega(g(n)) \), \( f(n) \) must eventually exceed \( C \cdot g(n) \) for any constant \( C \), which is not the case here as \( n^3 \) is the dominant term in \( f(n) \), and it grows slower than \( n^4 \).
+\end{enumerate}
+
+\section*{6.3.2}
+
+\section*{Application Case:}
+\begin{itemize}
+    \item 250GB hard disk with 160GB of files.
+    \item CPU with one core, 4GHz clock speed, and 64-bit registers.
+    \item Capable of \(4 \times 10^9\) 8-character comparisons per second.
+\end{itemize}
+
+\section*{Search Time Analysis}
+
+\begin{enumerate}
+    \item \textbf{ 1KB Signature:}
+    
+    The time needed to search for a 1KB signature case is 5 seconds. This is a worst case scenario, which means it is unrealistic and a Boyer-Moore calculartion will be better. 
+    
+    \item \textbf{Database of 1 Million 1KB Signatures:}
+    
+    For a Database with 1 million 1KB signatures, 57.87 days will approximately be a worst case scenario. This is where the signature searching is idependant and linear. THe Boyyer-Moore algorithm is going to be gaster than this with sublinear performatnce. 
+    
+    \item \textbf{Improving Efficiency:}
+    
+    To further improve the efficiency of malware/virus detection through string matching, we utilize paralell processing by distributing the search workload across multiple CPU cores or even differant machines; implementing more advanced string matching algorithms such as Aho-Corasick, which is desinged for searching multiple patterns simultaneously, can significantly reduce the time complexitity. Optimizing the algorithm fo preprocessing of the virus signatures and employing hueristic methods to skip unlikely sections of data can also enhance performance.  
+    
+\end{enumerate}
+\section*{Screenshots of Hand Written Calculations}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{Screenshot 2024-04-14 at 12.39.41 PM.png}
+\caption{Hand written calculations for task 6.3.1}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{Screenshot 2024-04-14 at 12.40.02 PM.png}
+\caption{Hand written calculations for task 6.3.2}
+\end{figure}
+
+\newpage
+\section*{References}
+
+\begin{enumerate}
+    \item Wikipedia contributors. (n.d.). Boyer–Moore string-search algorithm. \textit{Wikipedia, The Free Encyclopedia}. Retrieved April 14, 2024, from \url{https://en.wikipedia.org/wiki/Boyer-Moore_string-search_algorithm}
+    \item HackerEarth. (n.d.). Boyer-Moore algorithm. \textit{HackerEarth}. Retrieved April 14, 2024, from \url{https://www.hackerearth.com/practice/algorithms/string-algorithm/string-searching/tutorial/}
+
+    \item Programiz. (n.d.). \textit{Asymptotic Analysis: Big-O Notation and More}. Retrieved April 14, 2024, from \url{https://www.programiz.com/dsa/asymptotic-notations}
+    \item Wikipedia contributors. (2024, April 13). Asymptotic analysis. In \textit{Wikipedia, The Free Encyclopedia}. Retrieved 15:00, April 14, 2024, from \url{https://en.wikipedia.org/w/index.php?title=Asymptotic_analysis&oldid=currentID}
+\end{enumerate}
+
+\vfill 
+  \section*{Academic Integrity Pledge}
+   {\color{red}\textit{“This work complies with the JMU honor code. I did not give or receive unauthorized help on this assignment.”}}
+\end{document}

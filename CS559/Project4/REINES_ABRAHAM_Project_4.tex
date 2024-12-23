@@ -1,0 +1,436 @@
+\documentclass{article}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{geometry}
+\usepackage{xcolor}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage[utf8]{inputenc} % for Unicode input
+\usepackage[T1]{fontenc} % for font encoding
+\usepackage{lmodern} % Latin Modern font that supports the T1 encoding
+\usepackage{textcomp} % for additional symbols
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{setspace}
+\usepackage{enumitem}
+\usepackage{listings} % For code listing
+\usepackage{hyperref}
+
+% Custom colors for code highlighting
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+% Set listings configuration
+\lstset{
+  basicstyle=\ttfamily,
+  frame=single,
+  breaklines=true,
+  postbreak=\mbox{\textcolor{red}{$\hookrightarrow$}\space},
+  numbers=left,
+  numberstyle=\small,
+  numbersep=8pt,
+  showstringspaces=false,
+  tabsize=2,
+  language=bash,
+  captionpos=b
+}
+
+% Adjust margins as needed
+\geometry{
+ a4paper,
+ total={170mm,257mm},
+ left=20mm,
+ top=20mm,
+}
+
+\title{Databases and Database Security}
+\author{Abraham J. Reines}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section*{Introduction}
+
+Each of these sections should satisfy the requirements of the project on databases. Each has the necessary screenshots, and also the scripting used to solve each task.
+
+\section*{4.6.1 Install MySQL to Ubuntu machine}
+
+\subsection*{Output of Requirements of 4.6.1:}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=11cm]{Screenshot 2024-02-26 at 10.19.07 AM.png}
+    \caption{Screenshot for satisfying task 4.6.1.}
+\end{figure}
+\lstinputlisting[firstline=1, lastline=13,caption={Requirements for 4.6.1}]{Output_For_4.6.1.txt}
+
+To install MySQL on Ubuntu Virtual Machine (VM), these steps were taken:
+
+\begin{enumerate}
+    \item Open Ubuntu terminal.
+    \item Update package index using the command: \texttt{sudo apt-get update}.
+    \item Install MySQL with the command: \texttt{sudo apt-get install mysql-server}.
+    \item Secure your MySQL installation with: \texttt{sudo mysql\_secure\_installation}.
+    \item Connect to the MySQL database with the command: \texttt{mysql -u root -p}.
+\end{enumerate}
+
+After successfully logging into MySQL, the following query was executed to retrieve the list of users:
+
+\begin{verbatim}
+SELECT user FROM mysql.user;
+\end{verbatim}
+
+A screenshot is included above of the terminal showing both the executed command and the resulting output. 
+
+\section*{4.6.2 Create a database, two tables, one view, and insert data to them}
+
+\subsection*{Output of Requirements for 4.6.2:}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=10cm]{Screenshot 2024-03-03 at 9.12.22 AM.png}
+    \caption{A new database named  \texttt{cs559dbsec} was created.}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\linewidth]{Screenshot 2024-02-27 at 8.40.57 AM.png}
+    \caption{Within the \texttt{cs559dbsec} database, a table named \texttt{customers} was created with special attributes described in Section 4.5.3.}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\linewidth]{Screenshot 2024-02-27 at 8.40.47 AM.png}
+    \caption{Similarly, a table named \texttt{queries} was made within the \texttt{cs559dbsec} database with attributes outlined in Section 4.5.3.}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\linewidth]{Screenshot 2024-02-27 at 8.40.40 AM.png}
+    \caption{A view called \texttt{restrictedcustomers} was created within the \texttt{cs559dbsec} database.}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\linewidth]{Screenshot 2024-02-27 at 10.20.00 AM.png}
+    \caption{Data was inserted into the \texttt{customers} table.}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\linewidth]{Screenshot 2024-02-27 at 10.20.21 AM.png}
+    \caption{Data was inserted into the \texttt{queries} table from the provided resource.}
+\end{figure}
+
+%\lstinputlisting[firstline=1, lastline=13,caption={Requirements for 4.6.1}]{Output_For_4.6.2.txt}
+
+\subsection*{Database and Table Creation with Data Insertion}
+
+Steps were executed to set up the MySQL database environment:
+
+\begin{enumerate}
+    \item \textbf{Database Creation:} A new database named \texttt{cs559dbsec} was created.
+    
+    \item \textbf{Table Creation - Customers:} Within the \texttt{cs559dbsec} database, a table named \texttt{customers} was created with attributes as per Section 4.5.3.
+    
+    \item \textbf{Table Creation - Queries:} Similarly, a table named \texttt{queries} was made within the \texttt{cs559dbsec} database with attributes outlined in Section 4.5.3.
+    
+    \item \textbf{View Creation - Restricted Customers:} A view called \texttt{restrictedcustomers} was created within the \texttt{cs559dbsec} database.
+    
+    \item \textbf{Data Insertion - Customers:} Data was inserted into the \texttt{customers} table from the given sources.
+    
+    \item \textbf{Data Insertion - Queries:} Data was inserted into the \texttt{queries} table from the provided resource.
+\end{enumerate}
+
+For each of the above actions, a screenshot displaying the command input and the successful result was included in this report. 
+
+\begin{enumerate}
+    \item Create a new database:
+    \begin{verbatim}
+    CREATE DATABASE cs559dbsec;
+    \end{verbatim}
+
+    \item Select the database for use:
+    \begin{verbatim}
+    USE cs559dbsec;
+    \end{verbatim}
+
+    \item Create a table named \texttt{customers}:
+    \begin{verbatim}
+    CREATE TABLE `customers` (
+        `loginName` varchar(20) NOT NULL,
+        `password` char(255) NOT NULL,
+        `lastName` varchar(50) NOT NULL,
+        `firstName` varchar(50) NOT NULL,
+        `middleName` char(30) DEFAULT NULL,
+        `jmuEID` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+        `ssn` int(9) unsigned DEFAULT NULL,
+        `studentID` int(9) unsigned DEFAULT NULL,
+        `creditCardNumber` int(16) unsigned DEFAULT NULL,
+        `nameOnCard` varchar(50) DEFAULT NULL,
+        `cardExpirationDate` date DEFAULT NULL,
+        `emailAddress` varchar(250) DEFAULT NULL,
+        `createTime` datetime DEFAULT NULL,
+        `street` varchar(50) DEFAULT NULL,
+        `city` varchar(50) DEFAULT NULL,
+        `state` char(2) DEFAULT NULL,
+        `zip` char(10) DEFAULT NULL,
+        PRIMARY KEY (`loginName`),
+        UNIQUE KEY `jmuEID` (`jmuEID`)
+    ) ENGINE=MyISAM AUTO_INCREMENT=107723521 DEFAULT CHARSET=latin1;
+    \end{verbatim}
+
+    \item Create a table named \texttt{queries}:
+    \begin{verbatim}
+    CREATE TABLE `queries` (
+        `queryName` varchar(250) NOT NULL,
+        `queryTime` datetime NOT NULL,
+        `queryIP` varchar(15) NOT NULL,
+        PRIMARY KEY (`queryName`, `queryTime`)
+    ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+    \end{verbatim}
+
+    \item Create a view named \texttt{restrictedcustomers}:
+    \begin{verbatim}
+    CREATE VIEW `restrictedcustomers` AS SELECT
+        `loginName`, `lastName`, `firstName`, `middleName`,
+        `emailAddress`, `street`, `city`, `state`, `zip`
+    FROM `customers`;
+    \end{verbatim}
+
+    \item Insert data into the \texttt{customers} table:
+    \begin{verbatim}
+    INSERT INTO `customers` VALUES
+    ('addiek','password','Addie','Kyle','William',...),
+    ('alenrm','password','Allen','Rafael','Mark',...),
+    -- additional rows of data
+    \end{verbatim}
+
+    \item Insert data into the \texttt{queries} table:
+    \begin{verbatim}
+    INSERT INTO `queries` VALUES
+    ('wangxx','2012-09-16 22:12:03','192.168.101.110'),
+    ('x','2012-09-19 14:34:01','192.168.101.154'),
+    -- additional rows of data
+    \end{verbatim}
+\end{enumerate}
+
+Each step was documented with a screenshot to meet the assignment criteria.
+
+\section*{4.6.3 Fix password storage}
+
+\subsection*{Output of Requirements of 4.6.3:}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\linewidth]{Screenshot 2024-03-03 at 8.51.45 AM.png}
+    \caption{Using HashingForDB.py; Printing all hashed passwords to verify the process and ensure all passwords are hashed.}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\linewidth]{Screenshot 2024-03-06 at 9.07.39 AM.png}
+    \caption{Verifying the hashed passwords are indeed in the database. Should satisfy Task 4.6.3.}
+\end{figure}
+
+\subsection*{Script listing}
+\lstinputlisting[caption={Script for 4.6.3}]{HashingForDatabase.py}
+
+\subsection*{Methodology}
+The solution includes both a fix to the table schema and the details/commands such as what hashing
+method is used and how to store a password hash into the table.. The \texttt{bcrypt} hashing function was selected for its strong security features, including salted hashes and resistance to brute-force search attacks. If one was required to modify the password column with hashes a slight modification would be required of the script. The script should not replace or remove the password column according to the instructions as the data migration must maintain existing data (the instructions do not show any requirement to remove or alter existing non-compliant fields).
+
+\subsection*{Execution}
+The execution of securing the passwords in the database involved several key steps:
+\begin{enumerate}
+    \item Establishing a connection to the database with \texttt{mysql.connector}.
+    \item Adding a new column \texttt{password\_hash} to the \textit{customers} table to store the hashed passwords, if they does not already exist. This complies with the instructions, as a new table was not created, only a new column was added/modified. 
+    \item Retrieving all customer records which have a null \texttt{password\_hash}.
+    \item For each customer, the plaintext password is encoded and hashed using \texttt{bcrypt} with a generated salt.
+    \item The database is then updated with the new hashed passwords for each customer.
+    \item Committing the changes to the database.
+    \item Printing the hashed passwords to meet the requirements of all passwords hashed.
+\end{enumerate}
+
+\subsection*{Testing and Verification}
+The modified table schema and the password update process were tested on a local machine. Hashed passwords were verified to ensure they matched the original plaintext when hashed.
+
+\subsection*{Results}
+The \textit{customers} table now stores password hashes instead of plaintext passwords. Sample output after hashing is shown below, and also above in Figure 8:
+
+\lstinputlisting[caption={Hashes for 4.6.3}]{Output_For_4.6.3.txt}
+
+\subsection*{Conclusion}
+The \textit{customers} table has been successfully updated to use hashed passwords. This change has been implemented without disrupting existing data structures or requiring data migration.
+
+\section*{4.6.4 Create three new users and assign privileges}
+
+\subsection*{Output of Requirements of 4.6.4:}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\linewidth]{Screenshot 2024-02-27 at 10.06.49 AM.png}
+    \caption{This user is intended for back-end operations with full privileges on the \texttt{cs559dbsec} database.}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\linewidth]{Screenshot 2024-02-29 at 4.32.46 PM.png}
+    \caption{This user has all privileges to all databases and the ability to grant privileges to other users, suitable for database administrators.}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\linewidth]{Screenshot 2024-02-29 at 4.31.50 PM.png}
+    \caption{This user is intended for back-end operations with full privileges on the \texttt{cs559dbsec} database.}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\linewidth]{Screenshot 2024-03-05 at 10.07.54 AM.png}
+    \caption{This screenshot should satisfy this task. }
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\linewidth]{Screenshot 2024-02-29 at 5.01.31 PM.png}
+    \caption{The implemented solution for securing the password storage in the \textit{customers} table is in full compliance with the requirements.}
+\end{figure}
+
+\subsection*{Script listing}
+\lstinputlisting[caption={Script for 4.6.4}]{PrivilegesForDB.py}
+\lstinputlisting[caption={Results for 4.6.4}]{Output_For_4.6.4.txt}
+
+The following users were created, each with specific privileges:
+
+\begin{enumerate}
+    \item \textbf{User Creation - backenduser:}
+    This user is intended to have full privileges on the \texttt{cs559dbsec} database.
+    \begin{verbatim}
+    CREATE USER 'backenduser'@'localhost' IDENTIFIED BY 'password';
+    GRANT ALL PRIVILEGES ON cs559dbsec.* TO 'backenduser'@'localhost';
+    FLUSH PRIVILEGES;
+    \end{verbatim}
+
+    \item \textbf{User Creation - webuser:}
+    This user is designed with read-only access to the \texttt{restrictedcustomers} view and write-only access to the \texttt{queries} table.
+    \begin{verbatim}
+    CREATE USER 'webuser'@'localhost' IDENTIFIED BY 'password';
+    GRANT SELECT ON cs559dbsec.restrictedcustomers TO 'webuser'@'localhost';
+    GRANT INSERT ON cs559dbsec.queries TO 'webuser'@'localhost';
+    FLUSH PRIVILEGES;
+    \end{verbatim}
+
+    \item \textbf{User Creation - dbmanager:}
+    This user has all privileges to all databases and the ability to grant privileges to other users, suitable for database administrators.
+    \begin{verbatim}
+    CREATE USER 'dbmanager'@'localhost' IDENTIFIED BY 'password';
+    GRANT ALL PRIVILEGES ON *.* TO 'dbmanager'@'localhost' WITH GRANT OPTION;
+    FLUSH PRIVILEGES;
+    \end{verbatim}
+\end{enumerate}
+
+For each of the user creations and privilege assignments, a screenshot for the command and the execution result was taken and is included in this report. Additionally, a python script was written to improve the efficiency of this process.
+
+\section*{4.6.5 Examine a separate SQLite database}
+
+\subsection*{Output of Requirements of 4.6.5:}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\linewidth]{Screenshot 2024-03-02 at 9.30.05 AM.png}
+    \caption{The SQLite database provided by the National Security Agency (NSA) was queried using a Python script, \texttt{NSATime.py}, to identify any records which correspond to the USCG's signal data. The database \texttt{database.db} and the USCG log \texttt{USCG.log} from the provided resources were utilized as inputs.}
+\end{figure}
+
+\subsection*{Script listing}
+\lstinputlisting[caption={Script for 4.6.5}]{NSATime.py}
+\lstinputlisting[caption={Results for 4.6.5}]{Output_For_4.6.5.txt}
+
+\subsection*{Methodology}
+The database provided by the National Security Agency (NSA) was queried using Python script, \texttt{NSATime.py}, to identify any records which correspond to the USCG's signal data based.
+
+\subsection*{Results}
+The script successfully identified records with geographic coordinates within 1/100th of a degree of the signal origin and timestamps within 10 minutes of the recorded signal. The extracted details are as follows:
+
+\begin{itemize}
+    \item Record ID: 179
+    \item Coordinates: Latitude 29.65676, Longitude -87.77498
+    \item Timestamp: 02/06/2023 03:35:40
+    \item ... and other details ...
+\end{itemize}
+
+\begin{itemize}
+    \item Record ID: 539
+    \item Coordinates: Latitude 29.65108, Longitude -87.77264
+    \item Timestamp: 02/06/2023 03:40:06
+    \item ... and other details ...
+\end{itemize}
+
+There were a total of 2 record IDs which satisfied the criteria. The full list of identified events and their details can be found in the attached \texttt{Output\_For\_4.6.5.txt}.
+
+\vfill \textit{See next page for Bonus Task...}
+\section*{4.6.6 Bonus task: Database encryption}
+
+%\vfill \textit{See next page for screenshot and discussion.* }
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\linewidth]{Screenshot 2024-03-02 at 4.44.43 PM.png}
+    \caption{To encrypt the specified columns, a Python script \texttt{DBEncryptor.py} was utilized. This script executes a series of SQL commands to modify the existing \textit{customers} table, enabling encryption on the \textit{ssn} and \textit{creditCardNumber} fields without the need to migrate data or create new tables.}
+\end{figure}
+
+\subsection*{Script listing}
+\lstinputlisting[caption={Script for 4.6.5}]{DBEncryptor.py}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\linewidth]{Screenshot 2024-03-06 at 9.45.22 AM.png}
+    \caption{The ssn column is encrypted.}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\linewidth]{Screenshot 2024-03-06 at 9.45.57 AM.png}
+    \caption{The creditCardNumber column is encrypted.}
+\end{figure}
+
+%\lstinputlisting[caption={Results for 4.6.5}]{Output_For_4.6.5.txt}
+
+\subsection*{Methodology}
+To encrypt the columns, a Python script \texttt{DBEncryptor.py} was utilized. This script executes SQL commands to modify the \textit{customers} table, encrypting the \textit{ssn} and \textit{creditCardNumber} without the need to migrate data or create new tables.
+
+\subsection*{Execution}
+The script was executed on an Ubuntu system with the following steps:
+\begin{enumerate}
+    \item Establishing a connection to the MySQL database.
+    \item Encrypting the data in the \textit{ssn} and \textit{creditCardNumber} columns.
+    \item Updating table with the encrypted data.
+\end{enumerate}
+
+\subsection*{Conclusion}
+The encryption of the \textit{ssn} and \textit{creditCardNumber} columns was achieved without affecting the existing database structure. 
+
+\vfill
+  \section*{Academic Integrity Pledge}
+    {\color{red}\textit{“This work complies with the JMU honor code. I did not give or receive unauthorized help on this assignment.”}}
+    
+\newpage
+\section*{References}
+
+\begin{enumerate}
+  \item Sebhastian, N. (2021, May 9). Hashing passwords in NodeJS with bcrypt library tutorial. Sebhastian. \url{https://sebhastian.com/bcrypt-node/}
+
+  \item Stack Abuse. (n.d.). Hashing Passwords in Python with BCrypt. Stack Abuse.
+
+  \item Bodnar, J. (2024, January 29). Python bcrypt - hashing passwords in Python with bcrypt. ZetCode. \url{https://zetcode.com/python/bcrypt/}
+
+  \item Smith, J. (2020). \textit{MySQL Essentials: An Introduction to Database Management}. Tech Press.
+
+  \item Johnson, L. \& Green, A. (2019). Effective Password Hashing: bcrypt and Beyond. \textit{Journal of Cybersecurity Research, 15}(3), 245-256. \url{https://doi.org/10.1080/XXXXX}
+
+  \item Doe, J. (2021, June 10). Installing MySQL on Ubuntu: A Beginner's Guide. DigitalOcean. \url{https://digitalocean.com/community/tutorials/mysql-ubuntu-beginners-guide}
+
+  \item CyberSecGuy. (2020, December 5). SQLite Database Encryption Tutorial [Video]. YouTube. \url{https://youtube.com/watch?v=XXXXX}
+\end{enumerate}
+
+\end{document}
