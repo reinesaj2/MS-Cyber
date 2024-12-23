@@ -1,13 +1,12 @@
-# Computer Science Courses Codebase
+# Master's Degree Computer Science Codebase
 
-Welcome to the **Computer Science Courses Codebase** repository! This repository consolidates materials from multiple Computer Science (CS) courses, including projects, homework assignments, lecture notes, and supporting data files. Each course within the codebase focuses on distinct areas of computer science, providing a comprehensive resource for students and educators alike.
+Welcome to the **Master's Degree Computer Science Codebase** repository! This repository consolidates materials from multiple graduate-level Computer Science (CS) courses, including projects, homework assignments, lecture notes, and supporting data files. Each course within the codebase focuses on distinct areas of computer science, providing a comprehensive resource for master's students and educators alike.
 
 ## Table of Contents
 
 - [Courses Overview](#courses-overview)
   - [CS510: Course Management System](#cs510-course-management-system)
     - [Projects](#projects)
-      - [Project10-sol](#project10-sol)
     - [Data Files](#data-files)
   - [CS515: Symbolic Logic and Proof Techniques](#cs515-symbolic-logic-and-proof-techniques)
     - [Homework](#homework)
@@ -15,7 +14,6 @@ Welcome to the **Computer Science Courses Codebase** repository! This repository
     - [Homework](#homework-1)
   - [CS559: System Security and Access Control](#cs559-system-security-and-access-control)
     - [Projects](#projects-1)
-      - [Project1](#project1)
     - [Lecture Notes](#lecture-notes)
     - [Additional Components](#additional-components)
 - [Conclusion](#conclusion)
@@ -28,7 +26,7 @@ Welcome to the **Computer Science Courses Codebase** repository! This repository
 
 ### CS510: Course Management System
 
-**CS510** focuses on developing systems for managing course-related data, including student enrollments and grade statistics. The project in this course provides a robust system for handling course and student information through Python scripts and a command-line interface (CLI).
+**CS510** focuses on developing systems for managing course-related data, including student enrollments and grade statistics. This course provides a robust system for handling course and student information through Python scripts and a command-line interface (CLI).
 
 #### Projects
 
@@ -193,14 +191,14 @@ This lecture transcript provides a comprehensive overview of UNIX file permissio
 
 ## Conclusion
 
-This codebase integrates a diverse range of components across different Computer Science courses, encompassing project scripts, technical reports, homework assignments, and extensive lecture notes. Each course targets specific areas, such as:
+This codebase integrates a diverse range of components across different Computer Science courses within a master's degree program, encompassing project scripts, technical reports, homework assignments, and extensive lecture notes. Each course targets specific areas, such as:
 
 - **CS510:** Course management systems and student data handling.
 - **CS515:** Logical proof techniques and symbolic logic.
 - **CS512:** Expression evaluation and algorithmic efficiency.
 - **CS559:** System security, access control mechanisms, and UNIX file permissions.
 
-This multifaceted approach fosters a well-rounded understanding of computer science principles, from software development and logical reasoning to cybersecurity and system administration. Whether you're a student seeking comprehensive resources or an educator looking for structured materials, this repository serves as a valuable asset in the academic journey of computer science.
+This multifaceted approach fosters a well-rounded understanding of computer science principles, from software development and logical reasoning to cybersecurity and system administration. Whether you're a master's student seeking comprehensive resources or an educator looking for structured materials, this repository serves as a valuable asset in the academic journey of computer science.
 
 ---
 
